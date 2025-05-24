@@ -31,6 +31,11 @@ const meetingSchema = new Schema({
     required: true,
   },
   
+  meetingDuration: {
+    type: Number, 
+    required: true,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
