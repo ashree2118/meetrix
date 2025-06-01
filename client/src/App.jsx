@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Landing from './pages/Landing'
+import MeetSchedule from './pages/MeetSchedule'
 
 
 
@@ -11,7 +12,7 @@ function App() {
     <>
       <div>
         <Landing />
-        
+        <MeetSchedule />
       </div>
       
     </>
