@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {ApiError} from "../utils/ApiError.js"
+import ApiError from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
 import { v4 as uuidv4 } from "uuid"
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -9,6 +9,8 @@ const registerUser = asyncHandler( async (req, res) => {
     //get user details from frontend
     const { name, email, password, timezone } = req.body
     console.log("email: ", email)
+    console.log("name: ", name)
+    console.log("req.body:", req.body);
     
     //some method checks if any of the fields are empty
     if (
@@ -40,7 +42,7 @@ const registerUser = asyncHandler( async (req, res) => {
     })
 
     //remove password and other fields
-    const userCreated = await User.fondById(user._id).select(
+    const userCreated = await User.findById(user._id).select(
         "-password -userId"
     )
 
