@@ -37,6 +37,10 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+
+    refreshToken: {
+        type: String
+    }
 });
 
 userSchema.pre("save", async function (next) {
