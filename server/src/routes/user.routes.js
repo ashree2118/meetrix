@@ -6,11 +6,11 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 const upload = multer();
 
-// If you want to use upload.none() as middleware for a specific route:
+// Use upload.none() for both register and login to support form-data
 router.post("/register", upload.none(), registerUser);
+router.post("/login", upload.none(), loginUser);
 
-router.route("/login").post(loginUser)
-
-router.route("/logout").post(verifyJWT, logoutUser)
+router.post("/logout", verifyJWT, logoutUser);
+router.route("/refresh-token").post(refreshAccessToken);
 
 export default router;
