@@ -1,4 +1,4 @@
-import mongoose, { Schema } from mongoose;
+import mongoose, { Schema } from "mongoose";
 
 const meetingSchema = new Schema({
   meetingId: {
@@ -7,19 +7,17 @@ const meetingSchema = new Schema({
     unique: true,
   },
 
-  attendeeId: [{
+  attendeeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true,
-  }],
+  },
 
-  schedulerId: [{
+  schedulerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true,
-  }],
+  },
 
   utcTime: {
     type: Date,
@@ -33,18 +31,16 @@ const meetingSchema = new Schema({
 
   meetingDuration: {
     type: Number,
-    required: true,
+    required: true, // in minutes
   },
 
   createdAt: {
     type: Date,
     default: Date.now,
-  }
+  },
 },
-  {
-    timestamps: true
-  }
-);
+{
+  timestamps: true
+});
 
-
-export const Meeting = mongoose.model("Meeting", meetingSchema)
+export const Meeting = mongoose.model("Meeting", meetingSchema);
