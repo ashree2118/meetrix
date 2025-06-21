@@ -10,7 +10,7 @@ const getMeetingsGroupedByDate = async (req, res) => {
     const meetings = await Meeting.aggregate([
       {
         $match: {
-          attendeeId: new mongoose.Types.ObjectId(userId),
+          attendeeId: mongoose.Types.ObjectId.createFromHexString(userId),
         },
       },
       {

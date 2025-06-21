@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
 
-function userProfile() {
+function UserProfile() {
   return (
     <div>
       <h1 className='text-3xl md:text-4xl lg:text-6xl font-bold text-center py-4'>User Profile</h1>
@@ -19,4 +19,4 @@ function userProfile() {
   )
 }
 
-export default userProfile
+export default UserProfile

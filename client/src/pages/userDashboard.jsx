@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 
-function userDashboard() {
+function UserDashboard() {
   return (
     <div>
      <div>
@@ -23,4 +23,4 @@ function userDashboard() {
   )
 }
 
-export default userDashboard
+export default UserDashboard

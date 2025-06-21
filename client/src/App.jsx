@@ -1,22 +1,24 @@
-import { useState } from 'react'
-import Landing from './pages/Landing'
-import MeetSchedule from './pages/MeetSchedule'
-
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Landing from './pages/Landing';
+import MeetSchedule from './pages/MeetSchedule';
+import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
+import UserDashboard from './pages/UserDashboard';
 
 
 function App() {
-  
-
   return (
-    <>
-      <div>
-        <Landing />
-        <MeetSchedule />
-      </div>
-      
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/schedule/:username" element={<MeetSchedule />} />
+        <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="/user-dashboard" element={<UserDashboard />} />
+
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

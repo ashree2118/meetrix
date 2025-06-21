@@ -1,22 +1,135 @@
-import React from 'react'
-import { Button } from "@/components/ui/button"
+import React, { useState } from "react"
 import { Calendar } from "@/components/ui/calendar"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
+
+import "react-day-picker/dist/style.css"
 
 function MeetSchedule() {
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedTime, setSelectedTime] = useState("")
+  const [meetingPurpose, setMeetingPurpose] = useState("")
+  const [note, setNote] = useState("")
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!selectedDate || !selectedTime || !meetingPurpose) {
+      alert("Please fill all required fields")
+      return
+    }
+
+    const [hours, minutes] = selectedTime.split(":")
+    const combinedDate = new Date(selectedDate)
+    combinedDate.setHours(hours, minutes, 0, 0)
+
+    const meetingData = {
+      utcTime: combinedDate.toISOString(),
+      meetingPurpose,
+      note,
+      meetingDuration: 30, // change if you want dynamic
+    }
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/meeting/schedule`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // for cookie auth
+        body: JSON.stringify(meetingData),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert("Meeting scheduled successfully!")
+        // Optionally reset form
+        setSelectedDate(null)
+        setSelectedTime("")
+        setMeetingPurpose("")
+        setNote("")
+      } else {
+        alert(data.message || "Failed to schedule meeting")
+      }
+    } catch (err) {
+      console.error("Error:", err)
+      alert("Something went wrong. Try again.")
+    }
+  }
+
   return (
-    <div>
+    <div className="min-h-screen bg-muted flex flex-col items-center px-4 py-12">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8 space-y-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight">Schedule a Meeting</h1>
+          <p className="text-muted-foreground text-sm mt-2">Fill the details below</p>
+        </div>
 
-      <div className='flex flex-col items-center justify-center h-screen bg-gray-100'>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <Label className="text-sm font-medium text-gray-700">Pick a Date</Label>
+            <div className="rounded-md border mt-2">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                className="rounded-md border"
+              />
+            </div>
+          </div>
 
-        <h1 className=' text-3xl md:text-4xl lg:text-6xl font-bold text-center py-4'>Meetrix</h1>
+          <div>
+            <Label className="text-sm font-medium text-gray-700">Select Time</Label>
+            <Input
+              type="time"
+              className="w-full mt-2"
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              required
+            />
+          </div>
 
-        <p className='ttext-base sm:text-lg md:text-xl mb-8 text-center max-w-xl'>Schedule your meetings seamlessly with Meetrix.</p>
-        <Calendar />
+          <div>
+            <Label className="text-sm font-medium text-gray-700">Meeting Purpose</Label>
+            <Select value={meetingPurpose} onValueChange={setMeetingPurpose}>
+              <SelectTrigger className="w-full mt-2">
+                <SelectValue placeholder="Choose purpose" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="work">Work</SelectItem>
+                <SelectItem value="personal">Personal</SelectItem>
+                <SelectItem value="friends">Friends</SelectItem>
+                <SelectItem value="freelance">Freelance</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div className='mt-8'><Button >
-          Send Link
-        </Button></div>
-        
+          <div>
+            <Label className="text-sm font-medium text-gray-700">Optional Note</Label>
+            <Textarea
+              placeholder="Add a message or context..."
+              className="w-full mt-2"
+              rows={3}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+          </div>
+
+          <Button type="submit" className="w-full mt-4">
+            Schedule Meeting
+          </Button>
+        </form>
       </div>
     </div>
   )
