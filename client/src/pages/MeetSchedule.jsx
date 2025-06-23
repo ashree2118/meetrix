@@ -17,13 +17,15 @@ import "react-day-picker/dist/style.css"
 function MeetSchedule() {
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState("")
+  const [schedulerName, setSchedulerName] = useState("")
+  const [schedulerEmail, setSchedulerEmail] = useState("")
   const [meetingPurpose, setMeetingPurpose] = useState("")
   const [note, setNote] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!selectedDate || !selectedTime || !meetingPurpose) {
+    if (!selectedDate || !selectedTime || !meetingPurpose || !schedulerName || !schedulerEmail) {
       alert("Please fill all required fields")
       return
     }
@@ -33,10 +35,12 @@ function MeetSchedule() {
     combinedDate.setHours(hours, minutes, 0, 0)
 
     const meetingData = {
+      schedulerName,
+      schedulerEmail,
       utcTime: combinedDate.toISOString(),
       meetingPurpose,
       note,
-      meetingDuration: 30, // change if you want dynamic
+      meetingDuration: 30,
     }
 
     try {
@@ -45,7 +49,7 @@ function MeetSchedule() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // for cookie auth
+        credentials: "include",
         body: JSON.stringify(meetingData),
       })
 
@@ -53,9 +57,10 @@ function MeetSchedule() {
 
       if (res.ok) {
         alert("Meeting scheduled successfully!")
-        // Optionally reset form
         setSelectedDate(null)
         setSelectedTime("")
+        setSchedulerName("")
+        setSchedulerEmail("")
         setMeetingPurpose("")
         setNote("")
       } else {
@@ -77,7 +82,31 @@ function MeetSchedule() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <Label className="text-sm font-medium text-gray-700">Pick a Date</Label>
+            <Label>Full Name</Label>
+            <Input
+              type="text"
+              value={schedulerName}
+              onChange={(e) => setSchedulerName(e.target.value)}
+              required
+              placeholder="Your name"
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              value={schedulerEmail}
+              onChange={(e) => setSchedulerEmail(e.target.value)}
+              required
+              placeholder="your@email.com"
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label>Pick a Date</Label>
             <div className="rounded-md border mt-2">
               <Calendar
                 mode="single"
@@ -89,7 +118,7 @@ function MeetSchedule() {
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-gray-700">Select Time</Label>
+            <Label>Select Time</Label>
             <Input
               type="time"
               className="w-full mt-2"
@@ -100,7 +129,7 @@ function MeetSchedule() {
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-gray-700">Meeting Purpose</Label>
+            <Label>Meeting Purpose</Label>
             <Select value={meetingPurpose} onValueChange={setMeetingPurpose}>
               <SelectTrigger className="w-full mt-2">
                 <SelectValue placeholder="Choose purpose" />
@@ -116,7 +145,7 @@ function MeetSchedule() {
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-gray-700">Optional Note</Label>
+            <Label>Optional Note</Label>
             <Textarea
               placeholder="Add a message or context..."
               className="w-full mt-2"

@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ function Register() {
     password: "",
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   })
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -30,7 +33,7 @@ function Register() {
 
       if (res.ok) {
         alert("Registered successfully!")
-        // redirect to login
+        Navigate("/login")
       } else {
         alert(data.message || "Failed to register")
       }

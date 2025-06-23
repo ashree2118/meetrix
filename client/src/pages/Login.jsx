@@ -2,12 +2,15 @@ import React, { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -17,7 +20,7 @@ function Login() {
     e.preventDefault()
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/login`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -28,7 +31,7 @@ function Login() {
 
       if (res.ok) {
         alert("Login successful!")
-        // redirect to dashboard
+        navigate("/user-dashboard")
       } else {
         alert(data.message || "Login failed")
       }
