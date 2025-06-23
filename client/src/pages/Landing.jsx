@@ -10,6 +10,7 @@ function Landing() {
   <ul className="flex justify-center space-x-6 py-4">
     <li><Link to="/" className="hover:text-blue-600 font-medium">Home</Link></li>
     <li><Link to="/login" className="hover:text-blue-600 font-medium">Login</Link></li>
+    <li><Link to="/register" className="hover:text-blue-600 font-medium">Register</Link></li>
     <li><Link to="/user-profile" className="hover:text-blue-600 font-medium">Profile</Link></li>
     <li><Link to="/user-dashboard" className="hover:text-blue-600 font-medium">Dashboard</Link></li>
     <li><Link to="/schedule/yourusername" className="hover:text-blue-600 font-medium">Schedule</Link></li>

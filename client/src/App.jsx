@@ -4,6 +4,7 @@ import MeetSchedule from './pages/MeetSchedule';
 import Login from './pages/Login';
 import UserProfile from './pages/UserProfile';
 import UserDashboard from './pages/UserDashboard';
+import Register from './pages/Register';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/schedule/:username" element={<MeetSchedule />} />
         <Route path="/user-profile" element={<UserProfile />} />

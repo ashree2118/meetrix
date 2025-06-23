@@ -1,6 +1,6 @@
 import { Meeting } from "../models/meeting.model.js";
 import mongoose from "mongoose";
-import ApiResponse from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 // Get all meetings for an attendee, grouped by date (for calendar view)
 const getMeetingsGroupedByDate = async (req, res) => {
@@ -10,7 +10,7 @@ const getMeetingsGroupedByDate = async (req, res) => {
     const meetings = await Meeting.aggregate([
       {
         $match: {
-          attendeeId: mongoose.Types.ObjectId.createFromHexString(userId),
+          attendeeId: mongoose.Types.ObjectId(userId),
         },
       },
       {
@@ -33,6 +33,6 @@ const getMeetingsGroupedByDate = async (req, res) => {
   }
 };
 
-export default {
-  getMeetingsGroupedByDate,
+export {
+  getMeetingsGroupedByDate
 };
