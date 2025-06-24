@@ -13,7 +13,7 @@ function Landing() {
     <li><Link to="/register" className="hover:text-blue-600 font-medium">Register</Link></li>
     <li><Link to="/user-profile" className="hover:text-blue-600 font-medium">Profile</Link></li>
     <li><Link to="/user-dashboard" className="hover:text-blue-600 font-medium">Dashboard</Link></li>
-    <li><Link to="/schedule/yourusername" className="hover:text-blue-600 font-medium">Schedule</Link></li>
+    <li><Link to="/schedule/:username" className="hover:text-blue-600 font-medium">Schedule</Link></li>
   </ul>
 </nav>
 

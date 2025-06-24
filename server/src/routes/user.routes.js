@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { loginUser, logoutUser, registerUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails ,getUserByUsername} from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -15,5 +15,6 @@ router.route("/refresh-token").post(refreshAccessToken);
 router.get("/change-password", verifyJWT, changeCurrentPassword);
 router.get("/current-user", verifyJWT, getCurrentUser);
 router.patch("/update-account", verifyJWT, updateAccountDetails);
+router.get("/by-username/:username", getUserByUsername)
 
 export default router;

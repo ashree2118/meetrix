@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -33,7 +34,7 @@ function Register() {
 
       if (res.ok) {
         alert("Registered successfully!")
-        Navigate("/login")
+        navigate("/login")  // ✅ fixed `Navigate` to `navigate`
       } else {
         alert(data.message || "Failed to register")
       }
@@ -53,6 +54,11 @@ function Register() {
         </div>
 
         <div>
+          <Label htmlFor="username">Username</Label>
+          <Input name="username" value={formData.username} onChange={handleChange} required placeholder="Unique URL name" />
+        </div>
+
+        <div>
           <Label htmlFor="email">Email</Label>
           <Input name="email" type="email" value={formData.email} onChange={handleChange} required />
         </div>
@@ -64,7 +70,7 @@ function Register() {
 
         <div>
           <Label htmlFor="timezone">Timezone</Label>
-          <Input name="timezone" value={formData.timezone} onChange={handleChange} required  />
+          <Input name="timezone" value={formData.timezone} onChange={handleChange} required />
         </div>
 
         <Button type="submit" className="w-full">Register</Button>

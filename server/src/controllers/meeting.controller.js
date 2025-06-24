@@ -63,14 +63,12 @@ const scheduleMeeting = async (req, res) => {
     const meeting = await Meeting.create({
       meetingId: uuidv4(),
       attendeeId: attendeeUserId,
-      schedulerId: null, // optional: if user is unregistered
+      schedulerId: null,
       utcTime,
       meetingPurpose,
       meetingDuration: meetingDuration || 30,
-      schedulerDetails: {
-        name: schedulerName,
-        email: schedulerEmail,
-      },
+      schedulerName,
+      schedulerEmail,
     });
 
     return res.status(201).json(new ApiResponse(201, meeting, "Meeting scheduled successfully"));

@@ -22,35 +22,27 @@ const generateAccessAndRefreshTokens = async(userId) => {
 }
 
 const registerUser = asyncHandler( async (req, res) => {
-    
-    //get user details from frontend
-    const { name, email, password, timezone } = req.body
+    const { name, username, email, password, timezone } = req.body
     console.log("email: ", email)
     console.log("name: ", name)
     console.log("req.body:", req.body);
-    
-    //some method checks if any of the fields are empty
-    if (
-        [name, email, password, timezone].some((field) => field?.trim() === "")
-    ) {
+
+    if ([name, username, email, password, timezone].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required")
     }
-     
-    //write fuction for validations of each
-    
-    //check if the user already exists
+
     const existedUser = await User.findOne({
-        $or: [{email}]
+        $or: [{ email }, { username }]
     })
-    if(existedUser){
-        throw new ApiError(409, "User with this email already exists")
+    if (existedUser) {
+        throw new ApiError(409, "User with this email or username already exists")
     }
-    
-    //creating user entry in database
+
     const userId = uuidv4();
     const profileLink = `https://meetrix.com/profile/${userId}`;
     const user = await User.create({
         name,
+        username,
         email,
         password,
         timezone,
@@ -58,27 +50,23 @@ const registerUser = asyncHandler( async (req, res) => {
         userId
     })
 
-    //remove password and other fields
     const userCreated = await User.findById(user._id).select(
         "-password -userId"
     )
 
-    //check if the user is created
-    if(!userCreated){
+    if (!userCreated) {
         throw new ApiError(500, "Something went wrong while registering the user")
     }
 
-    //return response or error
     return res.status(201).json(
         new ApiResponse(200, userCreated, "User registered successfully")
     )
-
 })
 
 const loginUser = asyncHandler(async (req, res) => {
     const {email, password} = req.body
     console.log("email: ", email)
-    
+
     if(!email || !password){
         throw new ApiError(400, "email and password is required")
     }
@@ -130,16 +118,16 @@ const logoutUser = asyncHandler(async(req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
-    
+
     if(!incomingRefreshToken){
         throw new ApiError(401, "Refresh token is required")
     }
 
     try {
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
-    
+
         const user = await User.findById(decodedToken?._id)
-    
+
         if(!user){
             throw new ApiError(401, "invalid refresh token")      
         }
@@ -151,14 +139,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
         const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshTokens(user._id)
-    
+
         return res.status(200).cookie("accessToken", accessToken, options).cookie("refreshToken", newRefreshToken, options).json(
             new ApiResponse(200, {accessToken, refreshToken: newRefreshToken}, "Access token refreshed successfully")
         );
     } catch (error) {
         throw new ApiError(401, error?.message || "Something went wrong while refreshing access token")
     }
-
 })
 
 const changeCurrentPassword = asyncHandler(async(req, res) =>{
@@ -179,12 +166,13 @@ const getCurrentUser = asyncHandler(async(req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async(req, res) => {
-    const {name, email, timezone} = req.body
+    const {name, email, timezone, username} = req.body
     const user = await User.findByIdAndUpdate(req.user._id,{
         $set: {
             name,
             email,
-            timezone
+            timezone,
+            username
         }
     }, {new: true}).select("-password -refreshToken")
 
@@ -197,4 +185,21 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
     return res.status(200).json(new ApiResponse(200, user, "User details updated successfully"))
 })
 
-export {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails}
+const getUserByUsername = asyncHandler(async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username }).select("_id name email");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(new ApiResponse(200, user, "User found"));
+  } catch (error) {
+    console.error("Error fetching user by username:", error);
+    return res.status(500).json({ message: "Error retrieving user" });
+  }
+})
+
+export {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, getUserByUsername}

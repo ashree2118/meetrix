@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -12,15 +13,38 @@ import {
   SelectItem,
 } from "@/components/ui/select"
 
-import "react-day-picker/dist/style.css"
-
 function MeetSchedule() {
+  const { username } = useParams()
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState("")
   const [schedulerName, setSchedulerName] = useState("")
   const [schedulerEmail, setSchedulerEmail] = useState("")
   const [meetingPurpose, setMeetingPurpose] = useState("")
   const [note, setNote] = useState("")
+
+  const [attendeeInfo, setAttendeeInfo] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    async function fetchAttendee() {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/by-username/${username}`)
+        const data = await res.json()
+
+        if (res.ok) {
+          setAttendeeInfo(data.data)
+        } else {
+          setError(data.message || "Invalid scheduling link")
+        }
+      } catch (err) {
+        setError("Something went wrong while fetching attendee info")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchAttendee()
+  }, [username])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -35,6 +59,9 @@ function MeetSchedule() {
     combinedDate.setHours(hours, minutes, 0, 0)
 
     const meetingData = {
+      attendeeUserId: attendeeInfo._id,
+      attendeeName: attendeeInfo.name,
+      attendeeEmail: attendeeInfo.email,
       schedulerName,
       schedulerEmail,
       utcTime: combinedDate.toISOString(),
@@ -44,7 +71,7 @@ function MeetSchedule() {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/meeting/schedule`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/meetings/schedule`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,11 +99,14 @@ function MeetSchedule() {
     }
   }
 
+  if (loading) return <p className="text-center mt-20">Loading attendee info...</p>
+  if (error) return <p className="text-center mt-20 text-red-500">{error}</p>
+
   return (
     <div className="min-h-screen bg-muted flex flex-col items-center px-4 py-12">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8 space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Schedule a Meeting</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Schedule a Meeting with {attendeeInfo.name}</h1>
           <p className="text-muted-foreground text-sm mt-2">Fill the details below</p>
         </div>
 
@@ -111,7 +141,10 @@ function MeetSchedule() {
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={setSelectedDate}
+                onSelect={(date) => {
+    console.log("Date selected:", date)
+    setSelectedDate(date)
+  }}
                 className="rounded-md border"
               />
             </div>
