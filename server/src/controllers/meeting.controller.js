@@ -108,6 +108,7 @@ import { User } from "../models/user.model.js";
 import mongoose from "mongoose";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { v4 as uuidv4 } from "uuid";
+import sendMeetingConfirmation from '../servicesemailService.js'; // adjust path
 
 // GET: Group meetings by date (for logged-in user only)
 const getMeetingsGroupedByDate = async (req, res) => {
@@ -171,6 +172,33 @@ const scheduleMeeting = async (req, res) => {
       meetingDuration: meetingDuration || 30,
       schedulerName,
       schedulerEmail,
+    });
+
+    // Format date for emails
+    const formattedDate = new Date(meeting.utcTime).toLocaleString('en-IN', {
+      dateStyle: 'full',
+      timeStyle: 'short',
+      timeZone: 'Asia/Kolkata',
+    });
+
+    // Email to scheduler
+    await sendMeetingConfirmation({
+      toEmail: schedulerEmail,
+      toName: schedulerName,
+      subject: 'Your Meeting is Scheduled',
+      content: `<p>Hi ${schedulerName},</p>
+        <p>Your meeting with ${attendee.name} is scheduled for <strong>${formattedDate}</strong>.</p>
+        <p>Purpose: <strong>${meetingPurpose}</strong></p>`,
+    });
+
+    // Email to attendee
+    await sendMeetingConfirmation({
+      toEmail: attendee.email,
+      toName: attendee.name,
+      subject: 'New Meeting Scheduled',
+      content: `<p>Hi ${attendee.name},</p>
+        <p>${schedulerName} has scheduled a meeting with you on <strong>${formattedDate}</strong>.</p>
+        <p>Purpose: <strong>${meetingPurpose}</strong></p>`,
     });
 
     return res.status(201).json(new ApiResponse(201, meeting, "Meeting scheduled successfully"));
