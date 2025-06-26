@@ -18,6 +18,7 @@ connectDB()
     })
     app.listen(process.env.PORT || 9000, () => {
         console.log(` Server is running at port : ${process.env.PORT || 9000}`);
+
     })
 })
 .catch((error) => {
