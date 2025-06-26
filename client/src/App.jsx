@@ -16,7 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/schedule/:username" element={<MeetSchedule />} />
         <Route path="/user-profile" element={<UserProfile />} />
-        <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
 
       </Routes>
     </Router>

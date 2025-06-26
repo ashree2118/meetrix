@@ -38,8 +38,9 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(409, "User with this email or username already exists")
     }
 
+    
     const userId = uuidv4();
-    const profileLink = `https://meetrix.com/profile/${userId}`;
+    const profileLink = `https://meetrix.com/profile/${username}`;
     const user = await User.create({
         name,
         username,
@@ -189,7 +190,7 @@ const getUserByUsername = asyncHandler(async (req, res) => {
   try {
     const { username } = req.params;
 
-    const user = await User.findOne({ username }).select("_id name email");
+    const user = await User.findOne({ username }).select("_id name email profileLink");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

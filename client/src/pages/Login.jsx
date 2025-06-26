@@ -31,7 +31,7 @@ function Login() {
 
       if (res.ok) {
         alert("Login successful!")
-        navigate("/user-dashboard")
+        navigate("/dashboard")
       } else {
         alert(data.message || "Login failed")
       }
@@ -57,6 +57,7 @@ function Login() {
 
         <Button type="submit" className="w-full">Login</Button>
       </form>
+      {/* Redirect handled in handleSubmit with navigate("/dashboard") */}
     </div>
   )
 }
