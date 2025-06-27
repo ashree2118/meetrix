@@ -173,11 +173,23 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const updateAccountDetails = asyncHandler(async (req, res) => {
   const { name, email, timezone, username } = req.body;
 
+  // Ensure required fields aren't empty
+  if (![name, email, timezone, username].every(f => f?.trim())) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  // Optional: ensure username/email are unique
+  const existing = await User.findOne({
+    $or: [{ email }, { username }],
+    _id: { $ne: req.user._id }
+  });
+  if (existing) {
+    throw new ApiError(409, "This email or username is already taken");
+  }
+
   const user = await User.findByIdAndUpdate(
     req.user._id,
-    {
-      $set: { name, email, timezone, username },
-    },
+    { name, email, timezone, username },
     { new: true }
   ).select("-password -refreshToken");
 
@@ -186,9 +198,11 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   }
 
   await user.save({ validateBeforeSave: false });
-  return res.status(200).json(new ApiResponse(200, user, "User details updated successfully"));
-});
 
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User profile updated successfully"));
+});
 // 🔍 Get user by username
 const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
