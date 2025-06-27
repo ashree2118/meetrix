@@ -15,7 +15,7 @@ function UserProfile() {
         <p>Add meeting purpose: <input type="text" className="border border-gray-300 rounded-md p-2 mt-1" /></p>
         <p>Timezone: <input type="text" className="border border-gray-300 rounded-md p-2 mt-1" /></p>
       </div>
-      </div>
+    </div>
   )
 }
 

@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Landing from './pages/Landing';
-import MeetSchedule from './pages/MeetSchedule';
-import Login from './pages/Login';
-import UserProfile from './pages/UserProfile';
-import UserDashboard from './pages/UserDashboard';
-import Register from './pages/Register';
+import Landing from './pages/Landing.jsx';
+import MeetSchedule from './pages/MeetSchedule.jsx';
+import Login from './pages/Login.jsx';
+import UserProfile from './pages/UserProfile.jsx';
+import UserDashboard from './pages/UserDashboard.jsx';
+import Register from './pages/Register.jsx';
 
 
 function App() {
