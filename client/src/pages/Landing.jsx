@@ -30,4 +30,4 @@ function Landing() {
   )
 }
 
-export default <L></L>anding;
+export default Landing;
