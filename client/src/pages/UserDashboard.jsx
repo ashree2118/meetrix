@@ -306,7 +306,7 @@ function UserDashboard() {
           <Calendar
             selected={selectedDate}
             onSelect={setSelectedDate}
-            className=""
+            className="w"
             modifiers={{
               work: Object.entries(meetingsByDate)
                 .filter(([date, ms]) => ms.some(m => m.meetingPurpose === "work"))
