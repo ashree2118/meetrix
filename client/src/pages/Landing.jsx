@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
 import { motion } from 'framer-motion'
+import { Calendar } from '@/components/ui/calendar'
 
 function Landing() {
   const containerVariants = {
@@ -89,7 +90,7 @@ function Landing() {
             >
               Meetrix
             </motion.a>
-            
+            <Calendar/>
             {/* Auth Buttons */}
             <div className="flex space-x-3">
               <motion.a 
