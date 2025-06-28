@@ -93,7 +93,7 @@ function Calendar({
   ...props
 }) {
   return (
-    <DayPicker
+    <div style={{ border: "2px solid red" }}><DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
@@ -149,7 +149,7 @@ function Calendar({
       selected={selected}
       onSelect={onSelect}
       {...props}
-    />
+    /></div>
   );
 }
 
