@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { motion } from 'framer-motion'
 import { Calendar } from '@/components/ui/calendar'
+import meetrix_logo from '../assets/meetrix_logo.svg'
 
 function Landing() {
   const containerVariants = {
@@ -81,16 +82,15 @@ function Landing() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            {/* Logo/Brand */}
+            
             <motion.a 
               href="/" 
-              className="text-2xl font-bold text-black"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              Meetrix
+              className="text-2xl  inline-flex items-center hover:scale-105 transition-transform duration-300"
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+            <img className='py-1 mx-2 w-8' src={meetrix_logo} alt="/" />
+              <h1 className="text-2xl font-bold text-black">Meetrix</h1>
             </motion.a>
-            <Calendar/>
+        
             {/* Auth Buttons */}
             <div className="flex space-x-3">
               <motion.a 
@@ -211,6 +211,9 @@ function Landing() {
             </motion.div>
           ))}
         </motion.div>
+        <footer className="mt-16 text-center text-gray-500 text-sm">
+          &copy; {new Date().getFullYear()} developed with 🖤 by Anushree | All rights reserved @Meetrix.
+          </footer>
       </div>
     </div>
   )
