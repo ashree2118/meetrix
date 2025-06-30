@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -84,14 +85,52 @@ function UserProfile() {
 
   return (
     <div className="min-h-screen bg-muted flex flex-col items-center px-4 py-12">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8 space-y-8">
-        <h1 className="text-4xl font-bold text-center">Edit Profile</h1>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8 space-y-8"
+      >
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-4xl font-bold text-center"
+        >
+          Edit Profile
+        </motion.h1>
 
-        {message && <p className="text-green-600 text-center">{message}</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {message && (
+          <motion.p
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-green-600 text-center"
+          >
+            {message}
+          </motion.p>
+        )}
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-red-500 text-center"
+          >
+            {error}
+          </motion.p>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
+        <motion.form
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <Label>Name</Label>
             <Input
               name="name"
@@ -101,9 +140,13 @@ function UserProfile() {
               required
               className="mt-1"
             />
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
             <Label>Email</Label>
             <Input
               name="email"
@@ -113,9 +156,13 @@ function UserProfile() {
               required
               className="mt-1"
             />
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             <Label>Username</Label>
             <Input
               name="username"
@@ -125,9 +172,13 @@ function UserProfile() {
               required
               className="mt-1"
             />
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
             <Label>Timezone</Label>
             <Input
               name="timezone"
@@ -138,13 +189,19 @@ function UserProfile() {
               className="mt-1"
               placeholder="e.g. Asia/Kolkata"
             />
-          </div>
+          </motion.div>
 
-          <Button type="submit" className="w-full mt-4">
-            Update Profile
-          </Button>
-        </form>
-      </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            <Button type="submit" className="w-full mt-4">
+              Update Profile
+            </Button>
+          </motion.div>
+        </motion.form>
+      </motion.div>
     </div>
   );
 }
