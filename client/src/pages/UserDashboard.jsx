@@ -110,7 +110,7 @@ function UserDashboard() {
     >
       <div className="max-w-6xl mx-auto">
         <motion.button
-          className="absolute top-0 right-0 mt-2 mr-2 sm:mt-4 sm:mr-4 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition-colors z-10"
+          className="absolute top-0 right-0 mt-2 mr-2 sm:mt-4 sm:mr-4 px-4 py-2 rounded-lg bg-black text-white font-semibold shadow hover:bg-gray-700 transition-colors z-10"
           whileHover={{ scale: 1.08, boxShadow: "0 6px 24px rgba(37, 99, 235, 0.18)" }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate("/user-profile")}
