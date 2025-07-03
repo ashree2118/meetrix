@@ -114,16 +114,16 @@
 //             box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
 //             transform: scale(1.05) !important;
 //           }
-          
+
 //           .custom-calendar [aria-selected="true"]:hover {
 //             background-color: #2563eb !important;
 //             color: white !important;
 //           }
-          
+
 //           .custom-calendar button[aria-selected="true"] {
 //             position: relative;
 //           }
-          
+
 //           .custom-calendar button[aria-selected="true"]::after {
 //             content: '';
 //             position: absolute;
@@ -342,13 +342,13 @@ function MeetSchedule() {
   };
 
   if (loading) return (
-    <motion.div 
+    <motion.div
       className="min-h-screen bg-gray-50 flex items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.p 
+      <motion.p
         className="text-center mt-20 text-gray-600"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -360,13 +360,13 @@ function MeetSchedule() {
   );
 
   if (error) return (
-    <motion.div 
+    <motion.div
       className="min-h-screen bg-gray-50 flex items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.p 
+      <motion.p
         className="text-center mt-20 text-red-500"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -378,19 +378,19 @@ function MeetSchedule() {
   );
 
   return (
-    <motion.div 
+    <motion.div
       className="min-h-screen bg-gray-50 flex flex-col items-center px-4 py-6 sm:py-12"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <motion.div 
+      <motion.div
         className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <motion.h1 
+        <motion.h1
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 text-center"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -399,8 +399,8 @@ function MeetSchedule() {
           Schedule a Meeting with {attendeeInfo.name}
         </motion.h1>
 
-        <motion.form 
-          onSubmit={handleSubmit} 
+        <motion.form
+          onSubmit={handleSubmit}
           className="space-y-4 sm:space-y-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -511,15 +511,18 @@ function MeetSchedule() {
             <Label htmlFor="purpose" className="text-gray-700 font-medium">
               Meeting Purpose *
             </Label>
-            <Input
-              id="purpose"
-              type="text"
-              value={meetingPurpose}
-              onChange={(e) => setMeetingPurpose(e.target.value)}
-              className="mt-2 border-gray-300 focus:border-black focus:ring-black"
-              placeholder="Brief description of the meeting"
-              required
-            />
+            <Select value={meetingPurpose} onValueChange={setMeetingPurpose}>
+              <SelectTrigger className="w-full mt-2 border-gray-300 focus:border-black focus:ring-black">
+                <SelectValue placeholder="Choose purpose" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="work">Work</SelectItem>
+                <SelectItem value="personal">Personal</SelectItem>
+                <SelectItem value="friends">Friends</SelectItem>
+                <SelectItem value="freelance">Freelance</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </motion.div>
 
           <motion.div
