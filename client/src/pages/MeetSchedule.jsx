@@ -324,66 +324,66 @@ function MeetSchedule() {
   }, [selectedDate, attendeeInfo]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (
-    !selectedDate ||
-    !selectedTime ||
-    !meetingPurpose ||
-    !schedulerName ||
-    !schedulerEmail
-  ) {
-    alert("Please fill all required fields");
-    return;
-  }
-
-  const [hours, minutes] = selectedTime.split(":");
-  const dt = new Date(selectedDate);
-  dt.setHours(hours, minutes, 0, 0);
-
-  const meetingData = {
-    attendeeUserId: attendeeInfo._id,
-    attendeeName: attendeeInfo.name,
-    attendeeEmail: attendeeInfo.email,
-    schedulerName,
-    schedulerEmail,
-    utcTime: dt.toISOString(),
-    meetingPurpose,
-    note,
-    meetingDuration: 30,
-  };
-
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/api/v1/meetings/schedule`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(meetingData),
-      }
-    );
-
-    const data = await res.json();
-
-    if (res.ok) {
-      alert("Meeting scheduled successfully!");
-      setSelectedDate(null);
-      setSelectedTime("");
-      setSchedulerName("");
-      setSchedulerEmail("");
-      setMeetingPurpose("");
-      setNote("");
-    } else {
-      alert(data.message || "Failed to schedule meeting");
+    if (
+      !selectedDate ||
+      !selectedTime ||
+      !meetingPurpose ||
+      !schedulerName ||
+      !schedulerEmail
+    ) {
+      alert("Please fill all required fields");
+      return;
     }
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Something went wrong. Try again.");
-  }
-};
+
+    const [hours, minutes] = selectedTime.split(":");
+    const dt = new Date(selectedDate);
+    dt.setHours(hours, minutes, 0, 0);
+
+    const meetingData = {
+      attendeeUserId: attendeeInfo._id,
+      attendeeName: attendeeInfo.name,
+      attendeeEmail: attendeeInfo.email,
+      schedulerName,
+      schedulerEmail,
+      utcTime: dt.toISOString(),
+      meetingPurpose,
+      note,
+      meetingDuration: 30,
+    };
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/meetings/schedule`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(meetingData),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Meeting scheduled successfully!");
+        setSelectedDate(null);
+        setSelectedTime("");
+        setSchedulerName("");
+        setSchedulerEmail("");
+        setMeetingPurpose("");
+        setNote("");
+      } else {
+        alert(data.message || "Failed to schedule meeting");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Something went wrong. Try again.");
+    }
+  };
 
 
   if (loading) return (
@@ -544,6 +544,23 @@ function MeetSchedule() {
                     ))}
                   </SelectContent>
                 </Select>
+                {bookedTimes.length > 0 && (
+                  <motion.p
+                    className="text-sm text-red-500 mt-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <strong>Booked slots:</strong> {bookedTimes.map(time => {
+                      const [h, m] = time.split(":");
+                      const hour = parseInt(h);
+                      const isPM = hour >= 12;
+                      const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+                      const ampm = isPM ? "PM" : "AM";
+                      return `${formattedHour}:${m}${ampm}`;
+                    }).join(", ")}
+                  </motion.p>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
