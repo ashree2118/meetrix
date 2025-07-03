@@ -104,7 +104,36 @@ const scheduleMeeting = async (req, res) => {
   }
 };
 
+// GET: Fetch booked meeting slots for a specific date
+const getBookedSlotsByDate = async (req, res) => {
+  try {
+    const { date } = req.params;
+    const { user } = req.query;
+
+    if (!date || !user) {
+      return res.status(400).json({ message: "Date and user ID are required" });
+    }
+
+    const start = new Date(date + "T00:00:00.000Z");
+    const end = new Date(date + "T23:59:59.999Z");
+
+    const meetings = await Meeting.find({
+      attendeeId: user,
+      utcTime: { $gte: start, $lte: end }
+    });
+
+    const bookedTimes = meetings.map(m => m.utcTime);
+
+    return res.status(200).json(new ApiResponse(200, bookedTimes, "Booked slots for the date"));
+  } catch (error) {
+    console.error("Error in getBookedSlotsByDate:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 export {
   getMeetingsGroupedByDate,
-  scheduleMeeting
+  scheduleMeeting,
+  getBookedSlotsByDate
 };
