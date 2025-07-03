@@ -324,22 +324,67 @@ function MeetSchedule() {
   }, [selectedDate, attendeeInfo]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (
-      !selectedDate ||
-      !selectedTime ||
-      !meetingPurpose ||
-      !schedulerName ||
-      !schedulerEmail
-    ) {
-      alert("Please fill all required fields");
-      return;
-    }
-    const [hours, minutes] = selectedTime.split(":");
-    const dt = new Date(selectedDate);
-    dt.setHours(hours, minutes, 0, 0);
-    // ...rest unchanged...
+  e.preventDefault();
+
+  if (
+    !selectedDate ||
+    !selectedTime ||
+    !meetingPurpose ||
+    !schedulerName ||
+    !schedulerEmail
+  ) {
+    alert("Please fill all required fields");
+    return;
+  }
+
+  const [hours, minutes] = selectedTime.split(":");
+  const dt = new Date(selectedDate);
+  dt.setHours(hours, minutes, 0, 0);
+
+  const meetingData = {
+    attendeeUserId: attendeeInfo._id,
+    attendeeName: attendeeInfo.name,
+    attendeeEmail: attendeeInfo.email,
+    schedulerName,
+    schedulerEmail,
+    utcTime: dt.toISOString(),
+    meetingPurpose,
+    note,
+    meetingDuration: 30,
   };
+
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/meetings/schedule`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(meetingData),
+      }
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Meeting scheduled successfully!");
+      setSelectedDate(null);
+      setSelectedTime("");
+      setSchedulerName("");
+      setSchedulerEmail("");
+      setMeetingPurpose("");
+      setNote("");
+    } else {
+      alert(data.message || "Failed to schedule meeting");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong. Try again.");
+  }
+};
+
 
   if (loading) return (
     <motion.div
