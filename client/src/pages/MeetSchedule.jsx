@@ -269,7 +269,6 @@ function MeetSchedule() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch attendee info once
   useEffect(() => {
     async function fetchAttendee() {
       try {
@@ -288,7 +287,6 @@ function MeetSchedule() {
     fetchAttendee();
   }, [username]);
 
-  // When the date changes: fetch booked slots and compute available slots
   useEffect(() => {
     if (!selectedDate || !attendeeInfo) return;
 
@@ -298,7 +296,7 @@ function MeetSchedule() {
       { credentials: "include" }
     )
       .then((res) => res.json())
-      .then(({ data, message }) => {
+      .then(({ data }) => {
         if (data) {
           const booked = data.map((iso) => {
             const d = new Date(iso);
@@ -307,13 +305,10 @@ function MeetSchedule() {
             ).padStart(2, "0")}`;
           });
           setBookedTimes(booked);
-        } else {
-          console.error(message);
         }
       })
       .catch((e) => console.error(e));
 
-    // Create 30-min slots from 08:00 to 18:00
     const slots = [];
     for (let hour = 8; hour <= 17; hour++) {
       ["00", "30"].forEach((mm) => {
@@ -385,196 +380,131 @@ function MeetSchedule() {
     }
   };
 
+  if (loading)
+    return (
+      <motion.div className="min-h-screen flex items-center justify-center">
+        <motion.p
+          className="text-center text-gray-600"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+        >
+          Loading attendee info...
+        </motion.p>
+      </motion.div>
+    );
 
-  if (loading) return (
-    <motion.div
-      className="min-h-screen bg-gray-50 flex items-center justify-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.p
-        className="text-center mt-20 text-gray-600"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        Loading attendee info...
-      </motion.p>
-    </motion.div>
-  );
-
-  if (error) return (
-    <motion.div
-      className="min-h-screen bg-gray-50 flex items-center justify-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.p
-        className="text-center mt-20 text-red-500"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        {error}
-      </motion.p>
-    </motion.div>
-  );
+  if (error)
+    return (
+      <motion.div className="min-h-screen flex items-center justify-center">
+        <motion.p
+          className="text-center text-red-500"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+        >
+          {error}
+        </motion.p>
+      </motion.div>
+    );
 
   return (
     <motion.div
       className="min-h-screen bg-gray-50 flex flex-col items-center px-4 py-6 sm:py-12"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
     >
       <motion.div
-        className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8"
-        initial={{ y: 50, opacity: 0 }}
+        className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-6 space-y-6"
+        initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <motion.h1
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 text-center"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
+        <h1 className="text-3xl font-bold text-center text-gray-900">
           Schedule a Meeting with {attendeeInfo.name}
-        </motion.h1>
+        </h1>
 
-        <motion.form
-          onSubmit={handleSubmit}
-          className="space-y-4 sm:space-y-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.5 }}
-          >
-            <Label htmlFor="name" className="text-gray-700 font-medium">
-              Your Name *
-            </Label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <Label>Your Name *</Label>
             <Input
-              id="name"
               type="text"
               value={schedulerName}
               onChange={(e) => setSchedulerName(e.target.value)}
-              className="mt-2 border-gray-300 focus:border-black focus:ring-black"
-              placeholder="Enter your name"
               required
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.6 }}
-          >
-            <Label htmlFor="email" className="text-gray-700 font-medium">
-              Your Email *
-            </Label>
+          <div>
+            <Label>Your Email *</Label>
             <Input
-              id="email"
               type="email"
               value={schedulerEmail}
               onChange={(e) => setSchedulerEmail(e.target.value)}
-              className="mt-2 border-gray-300 focus:border-black focus:ring-black"
-              placeholder="Enter your email"
               required
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.7 }}
-          >
-            <Label className="text-gray-700 font-medium">Pick a Date</Label>
-            <AnimatePresence>
-              {selectedDate && (
-                <motion.p
-                  className="text-sm text-gray-600 font-medium mt-1"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Selected: {selectedDate.toLocaleDateString()}
-                </motion.p>
-              )}
-            </AnimatePresence>
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) =>
-                  setSelectedDate(date instanceof Date ? date : null)
-                }
-                className="rounded border custom-calendar mt-2"
-              />
-            </motion.div>
-          </motion.div>
+          <div>
+            <Label>Select Date</Label>
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={(date) =>
+                setSelectedDate(date instanceof Date ? date : null)
+              }
+              className="rounded border mt-2"
+            />
+            {selectedDate && (
+              <p className="text-sm mt-2 text-gray-600">
+                Selected: {selectedDate.toLocaleDateString()}
+              </p>
+            )}
+          </div>
 
           <AnimatePresence>
             {selectedDate && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Label className="text-gray-700 font-medium">Select Time</Label>
+                <Label>Select Time Slot</Label>
                 <Select value={selectedTime} onValueChange={setSelectedTime}>
-                  <SelectTrigger className="w-full mt-2 border-gray-300 focus:border-black focus:ring-black">
+                  <SelectTrigger className="mt-2">
                     <SelectValue placeholder="Choose time slot" />
                   </SelectTrigger>
                   <SelectContent>
                     {availableTimes.map((t) => (
-                      <SelectItem key={t} value={t} disabled={bookedTimes.includes(t)}>
+                      <SelectItem
+                        key={t}
+                        value={t}
+                        disabled={bookedTimes.includes(t)}
+                      >
                         {t}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {bookedTimes.length > 0 && (
-                  <motion.p
-                    className="text-sm text-red-500 mt-2"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <strong>Booked slots:</strong> {bookedTimes.map(time => {
-                      const [h, m] = time.split(":");
-                      const hour = parseInt(h);
-                      const isPM = hour >= 12;
-                      const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-                      const ampm = isPM ? "PM" : "AM";
-                      return `${formattedHour}:${m}${ampm}`;
-                    }).join(", ")}
-                  </motion.p>
+                  <p className="text-sm text-red-500 mt-2">
+                    <strong>Booked:</strong>{" "}
+                    {bookedTimes
+                      .map((time) => {
+                        const [h, m] = time.split(":");
+                        const hour = parseInt(h);
+                        const isPM = hour >= 12;
+                        const formattedHour = hour % 12 || 12;
+                        return `${formattedHour}:${m}${isPM ? "PM" : "AM"}`;
+                      })
+                      .join(", ")}
+                  </p>
                 )}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.8 }}
-          >
-            <Label htmlFor="purpose" className="text-gray-700 font-medium">
-              Meeting Purpose *
-            </Label>
+          <div>
+            <Label>Meeting Purpose *</Label>
             <Select value={meetingPurpose} onValueChange={setMeetingPurpose}>
-              <SelectTrigger className="w-full mt-2 border-gray-300 focus:border-black focus:ring-black">
+              <SelectTrigger className="mt-2">
                 <SelectValue placeholder="Choose purpose" />
               </SelectTrigger>
               <SelectContent>
@@ -585,48 +515,26 @@ function MeetSchedule() {
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.9 }}
-          >
-            <Label htmlFor="notes" className="text-gray-700 font-medium">
-              Additional Notes (Optional)
-            </Label>
+          <div>
+            <Label>Notes (Optional)</Label>
             <Textarea
-              id="notes"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              className="mt-2 border-gray-300 focus:border-black focus:ring-black resize-none"
-              placeholder="Any additional information or special requirements"
+              placeholder="Any extra information..."
               rows={3}
             />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 1.0 }}
-          >
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.1 }}
-            >
-              <Button
-                type="submit"
-                className="w-full bg-black hover:bg-gray-800 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
-              >
-                Schedule Meeting
-              </Button>
-            </motion.div>
-          </motion.div>
-        </motion.form>
+          <Button type="submit" className="w-full bg-black text-white">
+            Schedule Meeting
+          </Button>
+        </form>
       </motion.div>
     </motion.div>
   );
 }
 
 export default MeetSchedule;
+
