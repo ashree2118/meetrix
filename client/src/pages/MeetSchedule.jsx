@@ -484,7 +484,7 @@ function MeetSchedule() {
                   </SelectContent>
                 </Select>
                 {bookedTimes.length > 0 && (
-                  <p className="text-sm text-red-500 mt-2">
+                  <p className="text-sm text-gray-500 mt-2">
                     <strong>Booked:</strong>{" "}
                     {bookedTimes
                       .map((time) => {
