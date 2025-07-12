@@ -30,6 +30,12 @@ const meetingSchema = new Schema(
       required: true,
     },
 
+    schedulerUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    }
+
     utcTime: {
       type: Date,
       required: true,
