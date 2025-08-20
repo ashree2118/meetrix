@@ -1,88 +1,3 @@
-// import React, { useState } from "react"
-// import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
-// import { Button } from "@/components/ui/button"
-// import { useNavigate } from "react-router-dom"
-
-// function Register() {
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     username: "",
-//     email: "",
-//     password: "",
-//     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-//   })
-
-//   const navigate = useNavigate()
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value })
-//   }
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault()
-
-//     try {
-//       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/register`, {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         credentials: "include",
-//         body: JSON.stringify(formData),
-//       })
-
-//       const data = await res.json()
-
-//       if (res.ok) {
-//         alert("Registered successfully!")
-//         navigate("/login")  // ✅ fixed `Navigate` to `navigate`
-//       } else {
-//         alert(data.message || "Failed to register")
-//       }
-//     } catch (err) {
-//       alert("Something went wrong")
-//     }
-//   }
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-//       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-6">
-//         <h2 className="text-2xl font-bold text-center">Register</h2>
-
-//         <div>
-//           <Label htmlFor="name">Name</Label>
-//           <Input name="name" value={formData.name} onChange={handleChange} required />
-//         </div>
-
-//         <div>
-//           <Label htmlFor="username">Username</Label>
-//           <Input name="username" value={formData.username} onChange={handleChange} required placeholder="Unique URL name" />
-//         </div>
-
-//         <div>
-//           <Label htmlFor="email">Email</Label>
-//           <Input name="email" type="email" value={formData.email} onChange={handleChange} required />
-//         </div>
-
-//         <div>
-//           <Label htmlFor="password">Password</Label>
-//           <Input name="password" type="password" value={formData.password} onChange={handleChange} required />
-//         </div>
-
-//         <div>
-//           <Label htmlFor="timezone">Timezone</Label>
-//           <Input name="timezone" value={formData.timezone} onChange={handleChange} required />
-//         </div>
-
-//         <Button type="submit" className="w-full">Register</Button>
-//       </form>
-//     </div>
-//   )
-// }
-
-
-// export default Register
-
-
 import React, { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -99,6 +14,7 @@ function Register() {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   })
 
+  const [loading, setLoading] = useState(false) // ✅ loader state
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -107,6 +23,7 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true) // ✅ start loader
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/register`, {
@@ -126,6 +43,8 @@ function Register() {
       }
     } catch (err) {
       alert("Something went wrong")
+    } finally {
+      setLoading(false) // ✅ stop loader
     }
   }
 
@@ -189,7 +108,6 @@ function Register() {
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <source src="https://www.midjourney.com/jobs/572d0335-91dc-4d47-bc3c-9d189bd9b98e?index=0" type="video/mp4" />
-            {/* Fallback content */}
           </motion.video>
         </div>
         
@@ -325,9 +243,36 @@ function Register() {
               >
                 <Button 
                   type="submit" 
-                  className="w-full bg-black hover:bg-gray-800 text-white py-3 text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                  disabled={loading} // ✅ disable button while loading
+                  className="w-full bg-black hover:bg-gray-800 text-white py-3 text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                 >
-                  Create Account
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        ></path>
+                      </svg>
+                      Registering...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
                 </Button>
               </motion.div>
             </motion.div>

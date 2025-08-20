@@ -13,6 +13,7 @@ function UserProfile() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false); // ✅ new state for loader
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -55,6 +56,7 @@ function UserProfile() {
   // ✅ Correct endpoint: PATCH /update-account
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true); // ✅ start loader
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/update-account`, {
@@ -78,6 +80,8 @@ function UserProfile() {
     } catch (err) {
       setError("Something went wrong");
       setMessage("");
+    } finally {
+      setSubmitting(false); // ✅ stop loader
     }
   };
 
@@ -196,8 +200,38 @@ function UserProfile() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
-            <Button type="submit" className="w-full mt-4">
-              Update Profile
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="w-full mt-4 flex items-center justify-center gap-2"
+            >
+              {submitting ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  Updating...
+                </>
+              ) : (
+                "Update Profile"
+              )}
             </Button>
           </motion.div>
         </motion.form>

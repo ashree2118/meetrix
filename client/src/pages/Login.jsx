@@ -10,6 +10,7 @@ function Login() {
     email: "",
     password: "",
   })
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
 
@@ -19,6 +20,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true) // Start loader
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/users/login`, {
@@ -38,6 +40,8 @@ function Login() {
       }
     } catch (err) {
       alert("Something went wrong")
+    } finally {
+      setLoading(false) // Stop loader
     }
   }
 
@@ -88,7 +92,6 @@ function Login() {
         initial="hidden"
         animate="visible"
       >
-        {/* Video Background */}
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.video
             className="w-full h-full object-cover"
@@ -101,14 +104,9 @@ function Login() {
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <source src="https://www.midjourney.com/jobs/572d0335-91dc-4d47-bc3c-9d189bd9b98e?index=0" type="video/mp4" />
-            {/* Fallback content */}
           </motion.video>
         </div>
-        
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black/30"></div>
-        
-        {/* Content Overlay */}
         <motion.div 
           className="relative z-10 flex flex-col justify-center items-center text-white p-12"
           initial={{ opacity: 0, y: 50 }}
@@ -147,7 +145,6 @@ function Login() {
           initial="hidden"
           animate="visible"
         >
-          {/* Logo/Brand for mobile */}
           <motion.div 
             className="lg:hidden text-center mb-8"
             variants={itemVariants}
@@ -190,24 +187,33 @@ function Login() {
                 className="mt-1 border-gray-300 focus:border-black focus:ring-black transition-colors duration-200"
                 placeholder="Enter your password"
               />
-              <motion.div 
-                className="text-right mt-2 mb-16"
-                whileHover={{ scale: 1.02 }}
-              >
-                
-              </motion.div>
+              <motion.div className="text-right mt-2 mb-16"></motion.div>
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
+              <motion.div whileHover={!loading ? { scale: 1.02 } : {}} whileTap={!loading ? { scale: 0.98 } : {}}>
                 <Button 
                   type="submit" 
-                  className="w-full bg-black hover:bg-gray-800 text-white py-3 text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                  disabled={loading}
+                  className={`w-full bg-black hover:bg-gray-800 text-white py-3 text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center ${loading ? "opacity-75 cursor-not-allowed" : ""}`}
                 >
-                  Login
+                  {loading ? (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2"
+                    >
+                      <motion.div
+                        className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                      />
+                      Logging in...
+                    </motion.div>
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </motion.div>
             </motion.div>
