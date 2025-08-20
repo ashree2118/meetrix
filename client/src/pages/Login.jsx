@@ -86,7 +86,7 @@ function Login() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Video Section */}
-      <motion.div 
+      <motion.div
         className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
         variants={videoVariants}
         initial="hidden"
@@ -107,13 +107,13 @@ function Login() {
           </motion.video>
         </div>
         <div className="absolute inset-0 bg-black/30"></div>
-        <motion.div 
+        <motion.div
           className="relative z-10 flex flex-col justify-center items-center text-white p-12"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          <motion.h1 
+          <motion.h1
             className="text-5xl font-bold mb-6 text-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -121,7 +121,7 @@ function Login() {
           >
             Welcome Back
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-xl text-gray-200 text-center max-w-md"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -133,19 +133,19 @@ function Login() {
       </motion.div>
 
       {/* Right Side - Login Form */}
-      <motion.div 
+      <motion.div
         className=" lg:w-1/2 w-full flex items-center justify-center bg-white p-8 lg:p-16"
         variants={formVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.div 
+        <motion.div
           className="w-full max-w-md"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <motion.div 
+          <motion.div
             className="lg:hidden text-center mb-8"
             variants={itemVariants}
           >
@@ -158,19 +158,19 @@ function Login() {
             <p className="text-gray-600 mb-8">Hey, Welcome back to your Meetrix account</p>
           </motion.div>
 
-          <motion.form 
-            onSubmit={handleSubmit} 
+          <motion.form
+            onSubmit={handleSubmit}
             className="space-y-6"
             variants={containerVariants}
           >
             <motion.div variants={itemVariants}>
               <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
-              <Input 
-                name="email" 
-                type="email" 
-                value={formData.email} 
-                onChange={handleChange} 
-                required 
+              <Input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
                 className="mt-1 border-gray-300 focus:border-black focus:ring-black transition-colors duration-200"
                 placeholder="Enter your email"
               />
@@ -178,27 +178,36 @@ function Login() {
 
             <motion.div variants={itemVariants}>
               <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
-              <Input 
-                name="password" 
-                type="password" 
-                value={formData.password} 
-                onChange={handleChange} 
-                required 
+              <Input
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
                 className="mt-1 border-gray-300 focus:border-black focus:ring-black transition-colors duration-200"
                 placeholder="Enter your password"
               />
-              <motion.div className="text-right mt-2 mb-16"></motion.div>
+              <motion.div className="text-right mt-2"></motion.div>
+            </motion.div>
+
+            <motion.div className="text-right mt-2 mb-16" variants={itemVariants}>
+              <a
+                href="/forgot-password"
+                className="text-sm text-black hover:underline"
+              >
+                Forgot password?
+              </a>
             </motion.div>
 
             <motion.div variants={itemVariants}>
               <motion.div whileHover={!loading ? { scale: 1.02 } : {}} whileTap={!loading ? { scale: 0.98 } : {}}>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={loading}
                   className={`w-full bg-black hover:bg-gray-800 text-white py-3 text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center ${loading ? "opacity-75 cursor-not-allowed" : ""}`}
                 >
                   {loading ? (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.2 }}
@@ -218,13 +227,13 @@ function Login() {
               </motion.div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="text-center pt-4"
               variants={itemVariants}
             >
               <span className="text-gray-600">Don't have an account? </span>
-              <motion.a 
-                href="/register" 
+              <motion.a
+                href="/register"
                 className="text-black font-semibold hover:underline transition-all duration-200"
                 whileHover={{ scale: 1.05 }}
               >

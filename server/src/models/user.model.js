@@ -17,7 +17,7 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true, 
+        unique: true,
     },
 
     email: {
@@ -46,6 +46,14 @@ const userSchema = new Schema({
 
     refreshToken: {
         type: String
+    },
+
+    resetPasswordToken: { 
+        type: String 
+    },
+
+    resetPasswordExpiry: { 
+        type: Date 
     }
 });
 
