@@ -34,7 +34,7 @@ const meetingSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       default: null,
-    }
+    },
 
     utcTime: {
       type: Date,
