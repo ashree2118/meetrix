@@ -6,6 +6,8 @@ import UserProfile from './pages/UserProfile.jsx';
 import UserDashboard from './pages/UserDashboard.jsx';
 import Register from './pages/Register.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
