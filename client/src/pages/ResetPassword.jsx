@@ -28,7 +28,7 @@ function ResetPassword() {
     setLoading(true)
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/reset-password/${token}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/reset-password/${resetToken}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

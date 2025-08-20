@@ -4,22 +4,25 @@ const defaultClient = SibApiV3Sdk.ApiClient.instance;
 const apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
-const sendMeetingConfirmation = async ({ toEmail, toName, subject, content }) => {
+// ✅ Generic email sender (works for meeting confirmation & password reset)
+const sendEmail = async ({ toEmail, toName = "", subject, content }) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
   const sendSmtpEmail = {
     to: [{ email: toEmail, name: toName }],
-    sender: { email: "ashree2118@gmail.com", name: "Meetrix" }, // must be a verified sender in Brevo
+    sender: { email: "ashree2118@gmail.com", name: "Meetrix" }, // must be verified sender in Brevo
     subject,
     htmlContent: content,
   };
 
   try {
     const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log("✅ Email sent result:", result);
+    console.log("✅ Email sent successfully:", result.messageId || result);
+    return result;
   } catch (error) {
     console.error("❌ Brevo email error:", error.response?.body || error.message);
+    throw error;
   }
 };
 
-export default sendMeetingConfirmation;
+export default sendEmail;

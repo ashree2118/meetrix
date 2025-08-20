@@ -14,7 +14,7 @@ router.post("/login", upload.none(), loginUser);
 
 router.post("/logout", verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
-router.get("/change-password", verifyJWT, changeCurrentPassword);
+router.post("/change-password", verifyJWT, changeCurrentPassword);
 router.get("/current-user", verifyJWT, getCurrentUser);
 router.patch("/update-account", verifyJWT, updateAccountDetails);
 router.get("/by-username/:username", getUserByUsername)

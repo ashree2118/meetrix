@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { User } from "../models/user.model.js";
-import sendMeetingConfirmation from "../services/emailService.js";
+import sendEmail from "../services/emailService.js";
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ export const forgotPassword = async (req, res) => {
       <p>This link will expire in 15 minutes.</p>
     `;
 
-    await sendMeetingConfirmation({
+    await sendEmail({
       toEmail: user.email,
       toName: user.name || "",
       subject: "Password Reset Request",
